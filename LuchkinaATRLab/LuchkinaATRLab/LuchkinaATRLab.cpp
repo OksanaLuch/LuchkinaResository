@@ -8,7 +8,7 @@ struct Pipe
 	int id;
 	int d;
 	int l; //ot 10 do 200 sdelat' ogranichenie
-	string remont;
+	bool remont;
 };
 
 struct KampStation
@@ -21,7 +21,8 @@ struct KampStation
 void PrintePipe(const Pipe& p)
 {
 
-	cout << "Pipe number: " << p.id << "\n It's diameter is: " << p.d << " mm " << " \n It's lenght: " << p.l << " km \n" << "If it's in remont? The answer is " << p.remont << "\n";
+	cout << "Pipe number: " << p.id << "\n It's diameter is: " << p.d << " mm " << " \n It's lenght: " << p.l << " km \n" << "If it's in remont? The answer is ";
+	if (p.remont) cout << "yes \n"; else cout << "no\n";
 }
 
 Pipe AddPipe()
@@ -32,13 +33,41 @@ Pipe AddPipe()
 	cin >> p.d;
 	cout << "Vvedite lenght: ";
 	cin >> p.l;
-	while (p.l <= 10 or p.l >= 200) {
+	while (p.l < 10 or p.l > 200) {
 		cout << "Length of pipe must be from 10 to 200. Enter it again \n";
 		cin >> p.l;
 	}
-	cout << "Vvedite yes, esli truba v remonte. Inache no: ";
+	cout << "Vvedite 1, esli truba v remonte. Inache 0: ";
 	cin >> p.remont;
 	return p;
+}
+
+Pipe EditPipe(Pipe& p){
+	if (p.id) {
+		int g;
+		cout << "If you want to edit length of pipe enter 1. Else enter 0."; cin >> g;
+		if (g == 1) cin >> p.l;
+		cout << "If you want to edit status of remont of pipe enter 1. Else enter 0."; cin >> g;
+		if (g == 1)
+			if (p.remont) cout << "Truba v remonte"; else cout << "Truba ne v remonte";
+	}
+	else cout << "Pipe doesn't exist";
+	return p;
+}
+
+KampStation EditStation(KampStation& s) {
+	if (s.id) {
+		int g;
+		cout << "If you want to edit amount of tsehov enter 1. Else enter 0."; cin >> g;
+		if (g == 1) cin >> s.at;
+		cout << "If you want to edit emount of tsehov v rabote enter 1. Else enter 0."; cin >> g;
+		if (g == 1) cin >> s.atr;
+		cout << "If you want to edit effectivmost' of station enter 1. Else enter 0."; cin >> g;
+		if (g == 1) cin >> s.eff;
+	}
+	else cout << "Station doesn't exist";
+	return s;
+
 }
 
 KampStation AddStation() {
@@ -57,19 +86,20 @@ KampStation AddStation() {
 
 void PrintStation(const KampStation& s)
 {
-	cout << "Kompressornaya station with id " << s.id << " is named " << s.name << " It has " << s.at << " tsehov vsego and " << s.atr << " tsehov rabotaut. Effectivnost' of station is " << s.eff << "\n";
+	cout << "Kompressornaya station's id is " << s.id << "\n It's name is " << s.name << "\n It has " << s.at << " tsehov vsego and " << s.atr << " tsehov rabotaut.\n Effectivnost' of station is " << s.eff << "\n";
 }
 
 int main()
 {
-	int choice;
+	int continuee, choice;
 	Pipe p = {};
 	KampStation s = {};
 
 
+	//do 
+	while(1){
 	cout << "1.Add Pipe\n" << "2.Add Kompressornaya station\n" << "3.See all objects\n" << "4.Edit Pipe\n" << "5.Edit Kompressornaya station\n" << "0.Exit\n";
 	cin >> choice;
-	while (1) {
 		switch (choice)
 		{
 
@@ -84,34 +114,22 @@ int main()
 		case 3:
 			if (s.id == 1) PrintStation(s);
 			if (p.id == 1) PrintePipe(p);
-			if (s.id != 1 or p.id != 1) cout << "Dannih net. Neobhodimo vvesti.\n";
+			if (s.id != 1) cout << "Dannih anout station net. Neobhodimo vvesti.\n";
+			if (p.id != 1) cout << "Dannih about truba net. Neobhodimo vvesti.\n";
 			break;
 		case 4:
-			if (p.id) {
-				int g;
-				cout << "If you want to edit length of pipe enter 1. Else enter 0."; cin >> g;
-				if (g == 1) cin >> p.l;
-				cout << "If you want to edit status of remont of pipe enter 1. Else enter 0."; cin >> g;
-				if (g == 1) cin >> p.remont;
-			}
-			else cout << "Pipe doesn't exist";
+			EditPipe(p);
 			break;
 		case 5:
-			if (s.id) {
-				int g;
-				cout << "If you want to edit amount of tsehov enter 1. Else enter 0."; cin >> g;
-				if (g == 1) cin >> s.at;
-				cout << "If you want to edit emount of tsehov v rabote enter 1. Else enter 0."; cin >> g;
-				if (g == 1) cin >> s.atr;
-				cout << "If you want to edit effectivmost' of station enter 1. Else enter 0."; cin >> g;
-				if (g == 1) cin >> s.eff;
-			}
-			else cout << "Station doesn't exist";
+			EditStation(s);
 			break;
 		default:
 			break;
 		}
-	}
+		//cout << "If you want to finish enter 0. Else enter any number \n";
+		//cin >> continuee;
+	} 
+	//while (continuee); 
 
 }
 
