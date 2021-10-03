@@ -1,13 +1,14 @@
 ﻿#include "pch.h"
 #include <iostream>
 #include <string>
+#include <fstream>
 using namespace std;
 
 struct Pipe
 {
 	int id;
 	int d;
-	int l; //ot 10 do 200 sdelat' ogranichenie
+	int l;
 	bool remont;
 };
 
@@ -20,9 +21,11 @@ struct KampStation
 
 void PrintePipe(const Pipe& p)
 {
-
-	cout << "Pipe number: " << p.id << "\n It's diameter is: " << p.d << " mm " << " \n It's lenght: " << p.l << " km \n" << "If it's in remont? The answer is ";
-	if (p.remont) cout << "yes \n"; else cout << "no\n";
+	if (p.id != 0) {
+		cout << "Pipe number: " << p.id << "\n It's diameter is: " << p.d << " mm " << " \n It's lenght: " << p.l << " km \n" << "If it's in remont? The answer is ";
+		if (p.remont) cout << "yes \n"; else cout << "no\n";
+	}
+	else cout << "No dannih about truba";
 }
 
 Pipe AddPipe()
@@ -43,27 +46,41 @@ Pipe AddPipe()
 }
 
 Pipe EditPipe(Pipe& p){
-	if (p.id) {
-		int g;
-		cout << "If you want to edit length of pipe enter 1. Else enter 0."; cin >> g;
-		if (g == 1) cin >> p.l;
-		cout << "If you want to edit status of remont of pipe enter 1. Else enter 0."; cin >> g;
-		if (g == 1)
-			if (p.remont) cout << "Truba v remonte"; else cout << "Truba ne v remonte";
+	if (p.id==1) {
+		int choice;
+		cout << "If you want to edit length of pipe enter 1. Else enter 0.\n"; cin >> choice;
+		if (choice == 1) {
+			cout << "Vvedite novoe znachenie\n";
+			cin >> p.l;
+		}
+		cout << "If you want to edit status of remont of pipe enter 1. Else enter 0.\n"; cin >> choice;
+		if (choice == 1) {
+			cout << "Vvedite 1 if truba v remonte. Else vvedite 0 \n";
+			cin >> p.remont;
+		}
 	}
 	else cout << "Pipe doesn't exist";
 	return p;
 }
 
 KampStation EditStation(KampStation& s) {
-	if (s.id) {
+	if (s.id==1) {
 		int g;
-		cout << "If you want to edit amount of tsehov enter 1. Else enter 0."; cin >> g;
-		if (g == 1) cin >> s.at;
+		cout << "If you want to edit amount of tsehov enter 1. Else enter 0.\n"; cin >> g; 
+		if (g == 1){
+			cout << "Vvedite novoe znachenie\n";
+			cin >> s.at;
+		}
 		cout << "If you want to edit emount of tsehov v rabote enter 1. Else enter 0."; cin >> g;
-		if (g == 1) cin >> s.atr;
+		if (g == 1) {
+			cout << "Vvedite novoe znachenie\n";
+			cin >> s.atr;
+		}
 		cout << "If you want to edit effectivmost' of station enter 1. Else enter 0."; cin >> g;
-		if (g == 1) cin >> s.eff;
+		if (g == 1) {
+			cout << "Vvedite novoe znachenie\n";
+			cin >> s.eff;
+		}
 	}
 	else cout << "Station doesn't exist";
 	return s;
@@ -86,25 +103,50 @@ KampStation AddStation() {
 
 void PrintStation(const KampStation& s)
 {
+	if(s.id!=0)
 	cout << "Kompressornaya station's id is " << s.id << "\n It's name is " << s.name << "\n It has " << s.at << " tsehov vsego and " << s.atr << " tsehov rabotaut.\n Effectivnost' of station is " << s.eff << "\n";
+	else cout << "Dannih net";
+}
+
+void outfile(const Pipe& p,const KampStation& s) {
+	ofstream outfile("outfile.txt");
+	if (p.id != 0) {
+		outfile << "Pipe number: " << p.id << "\n It's diameter is: " << p.d << " mm " << " \n It's lenght: " << p.l << " km \n" << "If it's in remont? The answer is ";
+		if (p.remont) cout << "yes \n"; else cout << "no\n";
+	}
+	else outfile << "No dannih about truba\n";
+
+	if(s.id!=0)
+	outfile << "Kompressornaya station's id is " << s.id << "\n It's name is " << s.name << "\n It has " << s.at << " tsehov vsego and " << s.atr << " tsehov rabotaut.\n Effectivnost' of station is " << s.eff << "\n";
+	else outfile << "No dannih about station\n";
+
+}
+
+void fromfile(KampStation& s) {
+	char name[11];
+	s.name = "";
+	ifstream fromfile("infile.txt");
+	fromfile.getline(name,11);
+	for (int i = 0; i <= 11; i++) {
+		s.name = s.name + name[i];
+	}
+	fromfile.close();
 }
 
 int main()
 {
-	int continuee, choice;
+	int choice;
 	Pipe p = {};
 	KampStation s = {};
-
-
-	//do 
+ 
 	while(1){
-	cout << "1.Add Pipe\n" << "2.Add Kompressornaya station\n" << "3.See all objects\n" << "4.Edit Pipe\n" << "5.Edit Kompressornaya station\n" << "0.Exit\n";
+	cout << "1.Add Pipe\n" << "2.Add Kompressornaya station\n" << "3.See all objects\n" << "4.Edit Pipe\n" << "5.Edit Kompressornaya station\n" <<"6.Save data in file\n"<<"7.Take name of station frome file\n"<< "0.Exit\n";
 	cin >> choice;
 		switch (choice)
 		{
 
 		case 0:
-			return 0; // v menu 
+			return 0; 
 		case 1:
 			p = AddPipe();
 			break;
@@ -118,19 +160,22 @@ int main()
 			if (p.id != 1) cout << "Dannih about truba net. Neobhodimo vvesti.\n";
 			break;
 		case 4:
-			EditPipe(p);
+			p=EditPipe(p);
 			break;
 		case 5:
-			EditStation(s);
+			s=EditStation(s);
+			break;
+		case 6:
+			outfile(p,s);
+			break;
+		case 7:
+			fromfile(s);
 			break;
 		default:
 			break;
 		}
-		//cout << "If you want to finish enter 0. Else enter any number \n";
-		//cin >> continuee;
 	} 
-	//while (continuee); 
-
+	return 0;
 }
 
 
