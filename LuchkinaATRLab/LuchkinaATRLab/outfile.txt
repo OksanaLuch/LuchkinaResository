@@ -1,2 +1,7 @@
-No dannih about truba
-No dannih about station
+Pipe number: 1
+ It's diameter is: 38 mm  
+ It's lenght: 77 km 
+If it's in remont? The answer is Kompressornaya station's id is 1
+ It's name is Igor
+ It has 15 tsehov vsego and 78 tsehov rabotaut.
+ Effectivnost' of station is 4

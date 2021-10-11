@@ -45,7 +45,7 @@ Pipe AddPipe()
 	return p;
 }
 
-Pipe EditPipe(Pipe& p){
+void EditPipe(Pipe& p){
 	if (p.id==1) {
 		int choice;
 		cout << "If you want to edit length of pipe enter 1. Else enter 0.\n"; cin >> choice;
@@ -59,11 +59,10 @@ Pipe EditPipe(Pipe& p){
 			cin >> p.remont;
 		}
 	}
-	else cout << "Pipe doesn't exist";
-	return p;
+	else cout << "Pipe doesn't exist\n";
 }
 
-KampStation EditStation(KampStation& s) {
+void EditStation(KampStation& s) { 
 	if (s.id==1) {
 		int g;
 		cout << "If you want to edit amount of tsehov enter 1. Else enter 0.\n"; cin >> g; 
@@ -83,7 +82,6 @@ KampStation EditStation(KampStation& s) {
 		}
 	}
 	else cout << "Station doesn't exist";
-	return s;
 
 }
 
@@ -132,49 +130,64 @@ void fromfile(KampStation& s) {
 	}
 	fromfile.close();
 }
+int GetInt()
+{
+	int choice;
+	while (!(cin >> choice) || (cin.peek() != '\n'))
+	{
+		cout << "Vvedite tsifry iz menu\n";
+		cin.clear();
+		cin.ignore(1000, '\n');
+		//cin >> choice;
+	}
+	return choice;
+}
 
 int main()
 {
 	int choice;
+	string choice1;
 	Pipe p = {};
 	KampStation s = {};
  
-	while(1){
-	cout << "1.Add Pipe\n" << "2.Add Kompressornaya station\n" << "3.See all objects\n" << "4.Edit Pipe\n" << "5.Edit Kompressornaya station\n" <<"6.Save data in file\n"<<"7.Take name of station frome file\n"<< "0.Exit\n";
-	cin >> choice;
-		switch (choice)
-		{
+	while (1) {
+		cout << "1.Add Pipe\n" << "2.Add Kompressornaya station\n" << "3.See all objects\n" << "4.Edit Pipe\n" << "5.Edit Kompressornaya station\n" << "6.Save data in file\n" << "7.Take name of station frome file\n" << "0.Exit\n";
 
-		case 0:
-			return 0; 
-		case 1:
-			p = AddPipe();
-			break;
-		case 2:
-			s = AddStation();
-			break;
-		case 3:
-			if (s.id == 1) PrintStation(s);
-			if (p.id == 1) PrintePipe(p);
-			if (s.id != 1) cout << "Dannih anout station net. Neobhodimo vvesti.\n";
-			if (p.id != 1) cout << "Dannih about truba net. Neobhodimo vvesti.\n";
-			break;
-		case 4:
-			p=EditPipe(p);
-			break;
-		case 5:
-			s=EditStation(s);
-			break;
-		case 6:
-			outfile(p,s);
-			break;
-		case 7:
-			fromfile(s);
-			break;
-		default:
-			break;
-		}
-	} 
+			switch (GetInt())
+			{
+
+			case 0:
+				return 0;
+			case 1:
+				p = AddPipe();
+				break;
+			case 2:
+				s = AddStation();
+				break;
+			case 3:
+				if (s.id == 1) PrintStation(s);
+				if (p.id == 1) PrintePipe(p);
+				if (s.id != 1) cout << "Dannih anout station net. Neobhodimo vvesti.\n";
+				if (p.id != 1) cout << "Dannih about truba net. Neobhodimo vvesti.\n";
+				break;
+			case 4:
+				EditPipe(p);
+				break;
+			case 5:
+				EditStation(s);
+				break;
+			case 6:
+				outfile(p, s);
+				break;
+			case 7:
+				fromfile(s);
+				break;
+			default:
+				break;
+			}
+	}
+
+
 	return 0;
 }
 
