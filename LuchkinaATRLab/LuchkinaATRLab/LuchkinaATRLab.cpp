@@ -94,6 +94,10 @@ KampStation AddStation() {
 	cin >> s.at;
 	cout << "Vvedite kolichestvo rabitaushih tsehov: ";
 	cin >> s.atr;
+	while (s.atr > s.at) {
+		cout << "Amount of rabauschih tsehov can't be more than amount of tsehov vsego. Please vvedite correktnoe znachenie.\n";
+		cin >> s.atr;
+	}
 	cout << "Vvedite effectivnost' stantsii: ";
 	cin >> s.eff;
 	return s;
