@@ -110,29 +110,49 @@ void PrintStation(const KampStation& s)
 	else cout << "Dannih net";
 }
 
-void outfile(const Pipe& p,const KampStation& s) {
+void outfile(const Pipe& p, const KampStation& s) {
 	ofstream outfile("outfile.txt");
 	if (p.id != 0) {
-		outfile << "Pipe number: " << p.id << "\n It's diameter is: " << p.d << " mm " << " \n It's lenght: " << p.l << " km \n" << "If it's in remont? The answer is ";
-		if (p.remont) cout << "yes \n"; else cout << "no\n";
+		outfile << "pipe \n" << p.id << " \n" << p.d << " \n" << p.l << "\n"<< p.remont << endl;
+		// if (p.remont) cout « "1 \n"; else cout « "0\n";
 	}
-	else outfile << "No dannih about truba\n";
+	//else outfile « "No dannih about truba\n";
 
-	if(s.id!=0)
-	outfile << "Kompressornaya station's id is " << s.id << "\n It's name is " << s.name << "\n It has " << s.at << " tsehov vsego and " << s.atr << " tsehov rabotaut.\n Effectivnost' of station is " << s.eff << "\n";
-	else outfile << "No dannih about station\n";
+	if (s.id != 0)
+		outfile << "station \n" << s.id << "\n " << s.name << "\n" << s.at << "\n" << s.atr << "\n" << s.eff << "\n";
+	//else outfile « "No dannih about station\n";
 
 }
 
-void fromfile(KampStation& s) {
-	char name[11];
-	s.name = "";
-	ifstream fromfile("infile.txt");
-	fromfile.getline(name,11);
-	for (int i = 0; i <= 11; i++) {
-		s.name = s.name + name[i];
+void fromfile(KampStation& s, Pipe& p) {
+	ifstream f;
+	f.open("outfile.txt", ios::in);
+	if (f.good()) {
+		while (!f.eof()) {
+			string name;
+
+			f >> name;
+			if (name == "pipe")
+			{
+				f >> p.id;
+				f >> p.d;
+				f >> p.l;
+				f >> p.remont;
+			}
+
+			if (name == "station") {
+				f >> s.id;
+				f.ignore(256, '\n');
+				string(s.name);
+				getline(f, s.name);
+				f >> s.at;
+				f >> s.atr;
+				f >> s.eff;
+			}
+		}
+		cout << "Gotovo! \n";
 	}
-	fromfile.close();
+
 }
 int GetInt()
 {
@@ -155,7 +175,7 @@ int main()
 	KampStation s = {};
  
 	while (1) {
-		cout << "1.Add Pipe\n" << "2.Add Kompressornaya station\n" << "3.See all objects\n" << "4.Edit Pipe\n" << "5.Edit Kompressornaya station\n" << "6.Save data in file\n" << "7.Take name of station frome file\n" << "0.Exit\n";
+		cout << "1.Add Pipe\n" << "2.Add Kompressornaya station\n" << "3.See all objects\n" << "4.Edit Pipe\n" << "5.Edit Kompressornaya station\n" << "6.Save data in file\n" << "7.Take data frome file\n" << "0.Exit\n";
 
 			switch (GetInt())
 			{
@@ -184,7 +204,7 @@ int main()
 				outfile(p, s);
 				break;
 			case 7:
-				fromfile(s);
+				fromfile(s,p);
 				break;
 			default:
 				break;
