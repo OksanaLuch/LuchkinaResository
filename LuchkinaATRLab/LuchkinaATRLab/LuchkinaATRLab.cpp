@@ -179,7 +179,8 @@ int GetInt()
 }
 
 void EditFiltrPipe() {
-	int choice1, choice2;
+	int choice1, choice2, amountofpipes;
+	amountofpipes = 0;
 	int flength, fremont; //length for filtr 
 	cout << "If you want to get all pipes with konkretnym length enter 1. If you want to get all pipes with konkretnym priznakom about remont enter 2. ";
 	cin >> choice1;
@@ -189,33 +190,38 @@ void EditFiltrPipe() {
 		for (int i = 0; i <= ap; i++) {
 			if (Pipes[i].l == flength) {
 				cout << "We have pipe you need. Look: \n";
+				amountofpipes++;
 				PrintePipe(Pipes[i]);
 				cout << "If you want to edit it, enter 1. Else enter 0. \n";
 				cin >> choice2;
 				if (choice2 == 1) EditPipe(Pipes[i]);
 			}
 		}
+		if (amountofpipes== 0) cout << "There are no such pipes";
 
 	}
-
+	amountofpipes=0;
 	if (choice1 == 2) {
 		cout << "Enter status of remont: 1 or 0.\n";
 		cin >> fremont;
 		for (int i = 0; i <= ap; i++) {
 			if (Pipes[i].remont == fremont) {
 				cout << "We have pipe you need. Look: \n";
+				amountofpipes++;
 				PrintePipe(Pipes[i]);
 				cout << "If you want to edit it, enter 1. Else enter 0. \n";
 				cin >> choice2;
 				if (choice2 == 1) EditPipe(Pipes[i]);
 			}
 		}
+		if (amountofpipes == 0) cout << "There are no such pipes";
 	}
 }
 
 void EditFiltrStation() 
 {
-	int choice1, choice2;
+	int choice1, choice2, amountofstations, fprotsent;
+	amountofstations = 0;
 	string fname;
 	int ftsehi; //name and protsent of nezadeistvovannih tsehov for filtr 
 	cout << "If you want to get all stations with konkretnym name enter 1. If you want to get all statons with konkretnym protsent of nezadeistvovannih tsehov enter 2. ";
@@ -225,13 +231,35 @@ void EditFiltrStation()
 		cout << "Vvedite name for filtr \n";
 		cin >> fname;
 		for (int i = 0; i <= as; i++) {
-			if (Stations[i].name == fname)
+			if (Stations[i].name == fname) {
 				cout << "We have station you need. Look: \n";
-			PrintStation(Stations[i]);
-			cout << "If you want to edit it, enter 1. Else enter 0. \n";
-			cin >> choice2;
-			if (choice2 == 1) EditStation(Stations[i]);
+				amountofstations++;
+				PrintStation(Stations[i]);
+				cout << "If you want to edit it, enter 1. Else enter 0. \n";
+				cin >> choice2;
+				if (choice2 == 1) EditStation(Stations[i]);
+			}
+			
 		}
+		if (amountofstations == 0) cout << "There are no such stations";
+	}
+	amountofstations = 0;
+	if (choice1 == 2) {
+		cout << "Enter protsent of nezadeistvovannih tsehov \n";
+		cin >> fprotsent;
+		for (int i = 0; i <= as; i++) {
+			int protsent = ((Stations[i].at-Stations[i].atr) / Stations[i].at) * 100; cout << protsent;
+			if (protsent == fprotsent) {
+				cout << "We have station you need. Look: \n";
+				amountofstations++;
+				PrintStation(Stations[i]);
+				cout << "If you want to edit it, enter 1. Else enter 0. \n";
+				cin >> choice2;
+				if (choice2 == 1) EditStation(Stations[i]);
+			}
+
+		}
+			if (amountofstations == 0) cout << "There are no such stations";
 	}
 }
 
