@@ -38,7 +38,7 @@ void PrintePipe(const Pipe& p)
 Pipe AddPipe()
 {
 	Pipe p;
-	idp++;
+	++idp;
 	p.id = idp;
 	cout << "Vvedite diameter: ";
 	cin >> p.d;
@@ -56,7 +56,7 @@ Pipe AddPipe()
 }
 
 void EditPipe(Pipe& p){
-	if (p.id==1) {
+	
 		int choice;
 		cout << "If you want to edit length of pipe enter 1. Else enter 0.\n"; cin >> choice;
 		if (choice == 1) {
@@ -68,12 +68,11 @@ void EditPipe(Pipe& p){
 			cout << "Vvedite 1 if truba v remonte. Else vvedite 0 \n";
 			cin >> p.remont;
 		}
-	}
-	else cout << "Pipe doesn't exist\n";
+	
 }
 
 void EditStation(KampStation& s) { 
-	if (s.id==1) {
+	
 		int g;
 		cout << "If you want to edit amount of tsehov enter 1. Else enter 0.\n"; cin >> g; 
 		if (g == 1){
@@ -90,14 +89,13 @@ void EditStation(KampStation& s) {
 			cout << "Vvedite novoe znachenie\n";
 			cin >> s.eff;
 		}
-	}
-	else cout << "Station doesn't exist";
+	
 
 }
 
 KampStation AddStation() {
 	KampStation s;
-	ids++;
+	++ids;
 	s.id = ids;
 	cout << "Vvedite name of station: ";
 	cin >> s.name;
@@ -180,6 +178,63 @@ int GetInt()
 	return choice;
 }
 
+void EditFiltrPipe() {
+	int choice1, choice2;
+	int flength, fremont; //length for filtr 
+	cout << "If you want to get all pipes with konkretnym length enter 1. If you want to get all pipes with konkretnym priznakom about remont enter 2. ";
+	cin >> choice1;
+	if (choice1 == 1) {
+		cout << "Enter length\n";
+		cin >> flength;
+		for (int i = 0; i <= ap; i++) {
+			if (Pipes[i].l == flength) {
+				cout << "We have pipe you need. Look: \n";
+				PrintePipe(Pipes[i]);
+				cout << "If you want to edit it, enter 1. Else enter 0. \n";
+				cin >> choice2;
+				if (choice2 == 1) EditPipe(Pipes[i]);
+			}
+		}
+
+	}
+
+	if (choice1 == 2) {
+		cout << "Enter status of remont: 1 or 0.\n";
+		cin >> fremont;
+		for (int i = 0; i <= ap; i++) {
+			if (Pipes[i].remont == fremont) {
+				cout << "We have pipe you need. Look: \n";
+				PrintePipe(Pipes[i]);
+				cout << "If you want to edit it, enter 1. Else enter 0. \n";
+				cin >> choice2;
+				if (choice2 == 1) EditPipe(Pipes[i]);
+			}
+		}
+	}
+}
+
+void EditFiltrStation() 
+{
+	int choice1, choice2;
+	string fname;
+	int ftsehi; //name and protsent of nezadeistvovannih tsehov for filtr 
+	cout << "If you want to get all stations with konkretnym name enter 1. If you want to get all statons with konkretnym protsent of nezadeistvovannih tsehov enter 2. ";
+	cin >> choice1;
+
+	if (choice1 == 1) {
+		cout << "Vvedite name for filtr \n";
+		cin >> fname;
+		for (int i = 0; i <= as; i++) {
+			if (Stations[i].name == fname)
+				cout << "We have station you need. Look: \n";
+			PrintStation(Stations[i]);
+			cout << "If you want to edit it, enter 1. Else enter 0. \n";
+			cin >> choice2;
+			if (choice2 == 1) EditStation(Stations[i]);
+		}
+	}
+}
+
 int main()
 {
 	//max 5 stations and 5 pipes 
@@ -194,7 +249,7 @@ int main()
 	KampStation s = {};
  
 	while (1) {
-		cout << "1.Add Pipe\n" << "2.Add Kompressornaya station\n" << "3.See all objects\n" << "4.Edit Pipe\n" << "5.Edit Kompressornaya station\n" << "6.Save data in file\n" << "7.Take data frome file\n" << "0.Exit\n";
+		cout << "1.Add Pipe\n" << "2.Add Kompressornaya station\n" << "3.See all objects\n" << "4.Edit Pipe\n" << "5.Edit Kompressornaya station\n" << "6.Save data in file\n" << "7.Take data frome file\n" << "8.Delete pipe\n" << "9.Delete station\n" <<"0.Exit\n";
 
 			switch (GetInt())
 			{
@@ -202,7 +257,7 @@ int main()
 			case 0:
 				return 0;
 			case 1:
-				if (ap<5) 
+				if (ap < 5) 
 				Pipes[ap] = AddPipe();
 				else cout << "There are 5 Pipes. It's maximum. You can't add more but you can delete one of them and add new one.";
 				break;
@@ -212,14 +267,14 @@ int main()
 				else cout << "There are 5 Pipes. It's maximum. You can't add more but you can delete one of them and add new one.";
 				break;
 			case 3:
-				if (Stations.empty()) cout << "Dannih about stations net. Neobhodimo vvesti.\n";
+				if (as == 0) cout << "Dannih about stations net. Neobhodimo vvesti.\n";
 				else 
 					for (int i = 1; i <= as; i++) {
 						PrintStation(Stations[i]);
 						cout << "\n";
 					}
 
-				if (Pipes.empty()) cout << "Dannih about pipes net. Neobhodimo vvesti.\n";
+				if (ap == 0) cout << "Dannih about pipes net. Neobhodimo vvesti.\n";
 				else 
 					for (int i = 1; i <= ap; i++) {
 						PrintePipe(Pipes[i]);
@@ -227,22 +282,28 @@ int main()
 					}
 				break;
 			case 4:
+				if (ap > 0) {
 				cout << "There are " << ap << " pipes. Which would you like do edit? \n";
 				cin >> n;
 				while (n > ap) {
 					cout << "Takoy trubi net. Vvedite snova.\n";
 					cin >> n;
 				}
-				EditPipe(Pipes[n]);
+				EditPipe(Pipes[n-1]);
+				}
+				else cout << "There are no pipes.";
 				break;
 			case 5:
+				if (as>0){
 				cout << "There are " << as << " stations. Which would you like do edit? \n";
 				cin >> n;
 				while (n > as) {
 					cout << "Takoy station net. Vvedite snova.\n";
 					cin >> n;
 				}
-				EditStation(Stations[n]);
+				EditStation(Stations[n-1]);
+			}
+				else cout << "There are no pipes.";
 				break;
 			case 6:
 				outfile(p, s);
@@ -261,10 +322,10 @@ int main()
 					Pipes.erase(Pipes.cbegin() + (n - 1));
 					ap--;
 				}
-				else cout << "There are no stations";
+				else cout << "There are no stations.\n";
 				break;
 			case 9:
-				if (ap > 0) {
+				if (as > 0) {
 					cout << "There are " << as << " stations. Which would you like do delete? \n";
 					cin >> n;
 					while (n > as) {
@@ -274,7 +335,21 @@ int main()
 					Stations.erase(Stations.cbegin() + (n - 1));
 					as--;
 				}
-				else cout << "There are no pipes.";
+				else cout << "There are no pipes.\n";
+				break;
+			case 10: //poisk po fil'try
+				int choice;
+				cout << "If you want to find pipe enter 1. If you want to find station enter 2. \n";
+				cin >> choice;
+				if (choice == 1) {
+					if (ap >  0) EditFiltrPipe();
+					else cout << "Trub net.\n";
+				}
+				if (choice == 2) {
+					if (as > 0) EditFiltrStation();
+					else cout << "Stations net.\n";
+				}
+	
 				break;
 			default:
 				break;
