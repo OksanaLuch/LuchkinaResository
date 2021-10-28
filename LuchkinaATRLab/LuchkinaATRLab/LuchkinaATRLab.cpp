@@ -7,7 +7,7 @@ using namespace std;
 
 struct Pipe
 {
-	int id;
+	int id=0;
 	int d;
 	int l;
 	bool remont;
@@ -15,13 +15,14 @@ struct Pipe
 
 struct KampStation
 {
-	int id, at, atr; //at - amount of tsehov vsego. atr - amount of tsehov v rabote
+	int id = 0;
+	int at, atr; //at - amount of tsehov vsego. atr - amount of tsehov v rabote
 	float eff; //eff - effectivnost'
 	string name;
 };
 
-vector <Pipe> Pipes; 
-vector <KampStation> Stations;
+vector <Pipe> Pipes(5); 
+vector <KampStation> Stations(5);
 int ap, as, idp, ids; //ap-amount of pipes, as - amount of station, idp and ids - peremenie for id
 
 
@@ -202,19 +203,28 @@ int main()
 				return 0;
 			case 1:
 				if (ap<5) 
-				p = AddPipe();
+				Pipes[ap] = AddPipe();
 				else cout << "There are 5 Pipes. It's maximum. You can't add more but you can delete one of them and add new one.";
 				break;
 			case 2:
 				if (as < 5)
-				s = AddStation();
+				Stations[as] = AddStation();
 				else cout << "There are 5 Pipes. It's maximum. You can't add more but you can delete one of them and add new one.";
 				break;
 			case 3:
-				if (s.id == 1) PrintStation(s);
-				if (p.id == 1) PrintePipe(p);
-				if (s.id != 1) cout << "Dannih about station net. Neobhodimo vvesti.\n";
-				if (p.id != 1) cout << "Dannih about truba net. Neobhodimo vvesti.\n";
+				if (Stations.empty()) cout << "Dannih about stations net. Neobhodimo vvesti.\n";
+				else 
+					for (int i = 1; i <= as; i++) {
+						PrintStation(Stations[i]);
+						cout << "\n";
+					}
+
+				if (Pipes.empty()) cout << "Dannih about pipes net. Neobhodimo vvesti.\n";
+				else 
+					for (int i = 1; i <= ap; i++) {
+						PrintePipe(Pipes[i]);
+						cout << "\n";
+					}
 				break;
 			case 4:
 				cout << "There are " << ap << " pipes. Which would you like do edit? \n";
@@ -241,23 +251,30 @@ int main()
 				fromfile(s,p);
 				break;
 			case 8:
-				cout << "There are " << ap << " pipes. Which would you like do delete? \n";
-				cin >> n;
-				while (n > ap) {
-					cout << "Takoy trubi net. Vvedite snova.\n";
+				if (ap > 0) {
+					cout << "There are " << ap << " pipes. Which would you like do delete? \n";
 					cin >> n;
+					while (n > ap) {
+						cout << "Takoy trubi net. Vvedite snova.\n";
+						cin >> n;
+					}
+					Pipes.erase(Pipes.cbegin() + (n - 1));
+					ap--;
 				}
-				Pipes.erase(Pipes.cbegin()+(n-1));
-				ap--;
+				else cout << "There are no stations";
+				break;
 			case 9:
-				cout << "There are " << as << " stations. Which would you like do delete? \n";
-				cin >> n;
-				while (n > as) {
-					cout << "Takoy station net. Vvedite snova.\n";
+				if (ap > 0) {
+					cout << "There are " << as << " stations. Which would you like do delete? \n";
 					cin >> n;
+					while (n > as) {
+						cout << "Takoy station net. Vvedite snova.\n";
+						cin >> n;
+					}
+					Stations.erase(Stations.cbegin() + (n - 1));
+					as--;
 				}
-				Stations.erase(Stations.cbegin() + (n - 1));
-				as--;
+				else cout << "There are no pipes.";
 				break;
 			default:
 				break;
