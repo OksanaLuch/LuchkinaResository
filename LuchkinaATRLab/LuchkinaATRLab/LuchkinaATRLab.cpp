@@ -2,6 +2,7 @@
 #include <iostream>
 #include <string>
 #include <fstream>
+#include <vector>
 using namespace std;
 
 struct Pipe
@@ -19,6 +20,11 @@ struct KampStation
 	string name;
 };
 
+vector <Pipe> Pipes; 
+vector <KampStation> Stations;
+int ap, as, idp, ids; //ap-amount of pipes, as - amount of station, idp and ids - peremenie for id
+
+
 void PrintePipe(const Pipe& p)
 {
 	if (p.id != 0) {
@@ -31,7 +37,8 @@ void PrintePipe(const Pipe& p)
 Pipe AddPipe()
 {
 	Pipe p;
-	p.id = 1;
+	idp++;
+	p.id = idp;
 	cout << "Vvedite diameter: ";
 	cin >> p.d;
 	cout << "Vvedite lenght: ";
@@ -42,6 +49,8 @@ Pipe AddPipe()
 	}
 	cout << "Vvedite 1, esli truba v remonte. Inache 0: ";
 	cin >> p.remont;
+	Pipes.push_back(p);
+	ap++;
 	return p;
 }
 
@@ -87,7 +96,8 @@ void EditStation(KampStation& s) {
 
 KampStation AddStation() {
 	KampStation s;
-	s.id = 1;
+	ids++;
+	s.id = ids;
 	cout << "Vvedite name of station: ";
 	cin >> s.name;
 	cout << "Vvedite obshee kolichestvo tsehov: ";
@@ -100,6 +110,8 @@ KampStation AddStation() {
 	}
 	cout << "Vvedite effectivnost' stantsii: ";
 	cin >> s.eff;
+	Stations.push_back(s);
+	as++;
 	return s;
 }
 
@@ -114,13 +126,13 @@ void outfile(const Pipe& p, const KampStation& s) {
 	ofstream outfile("outfile.txt");
 	if (p.id != 0) {
 		outfile << "pipe \n" << p.id << " \n" << p.d << " \n" << p.l << "\n"<< p.remont << endl;
-		// if (p.remont) cout « "1 \n"; else cout « "0\n";
+	
 	}
-	//else outfile « "No dannih about truba\n";
+	
 
 	if (s.id != 0)
 		outfile << "station \n" << s.id << "\n " << s.name << "\n" << s.at << "\n" << s.atr << "\n" << s.eff << "\n";
-	//else outfile « "No dannih about station\n";
+
 
 }
 
@@ -169,7 +181,13 @@ int GetInt()
 
 int main()
 {
+	//max 5 stations and 5 pipes 
+	ap = 0;
+	as = 0;
+	idp = 0;
+	ids = 0; 
 	int choice;
+	int n;
 	string choice1;
 	Pipe p = {};
 	KampStation s = {};
@@ -183,28 +201,63 @@ int main()
 			case 0:
 				return 0;
 			case 1:
+				if (ap<5) 
 				p = AddPipe();
+				else cout << "There are 5 Pipes. It's maximum. You can't add more but you can delete one of them and add new one.";
 				break;
 			case 2:
+				if (as < 5)
 				s = AddStation();
+				else cout << "There are 5 Pipes. It's maximum. You can't add more but you can delete one of them and add new one.";
 				break;
 			case 3:
 				if (s.id == 1) PrintStation(s);
 				if (p.id == 1) PrintePipe(p);
-				if (s.id != 1) cout << "Dannih anout station net. Neobhodimo vvesti.\n";
+				if (s.id != 1) cout << "Dannih about station net. Neobhodimo vvesti.\n";
 				if (p.id != 1) cout << "Dannih about truba net. Neobhodimo vvesti.\n";
 				break;
 			case 4:
-				EditPipe(p);
+				cout << "There are " << ap << " pipes. Which would you like do edit? \n";
+				cin >> n;
+				while (n > ap) {
+					cout << "Takoy trubi net. Vvedite snova.\n";
+					cin >> n;
+				}
+				EditPipe(Pipes[n]);
 				break;
 			case 5:
-				EditStation(s);
+				cout << "There are " << as << " stations. Which would you like do edit? \n";
+				cin >> n;
+				while (n > as) {
+					cout << "Takoy station net. Vvedite snova.\n";
+					cin >> n;
+				}
+				EditStation(Stations[n]);
 				break;
 			case 6:
 				outfile(p, s);
 				break;
 			case 7:
 				fromfile(s,p);
+				break;
+			case 8:
+				cout << "There are " << ap << " pipes. Which would you like do delete? \n";
+				cin >> n;
+				while (n > ap) {
+					cout << "Takoy trubi net. Vvedite snova.\n";
+					cin >> n;
+				}
+				Pipes.erase(Pipes.cbegin()+(n-1));
+				ap--;
+			case 9:
+				cout << "There are " << as << " stations. Which would you like do delete? \n";
+				cin >> n;
+				while (n > as) {
+					cout << "Takoy station net. Vvedite snova.\n";
+					cin >> n;
+				}
+				Stations.erase(Stations.cbegin() + (n - 1));
+				as--;
 				break;
 			default:
 				break;
