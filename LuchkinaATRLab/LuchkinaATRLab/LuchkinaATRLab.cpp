@@ -50,7 +50,7 @@ Pipe AddPipe()
 	}
 	cout << "Vvedite 1, esli truba v remonte. Inache 0: ";
 	cin >> p.remont;
-	Pipes.push_back(p);
+	Pipes[ap]=p;
 	ap++;
 	return p;
 }
@@ -109,7 +109,7 @@ KampStation AddStation() {
 	}
 	cout << "Vvedite effectivnost' stantsii: ";
 	cin >> s.eff;
-	Stations.push_back(s);
+	Stations[as]=s;
 	as++;
 	return s;
 }
@@ -241,14 +241,15 @@ void EditFiltrStation()
 			}
 			
 		}
-		if (amountofstations == 0) cout << "There are no such stations";
+		if (amountofstations == 0) cout << "There are no such stations \n";
 	}
 	amountofstations = 0;
+	int protsent;
 	if (choice1 == 2) {
 		cout << "Enter protsent of nezadeistvovannih tsehov \n";
 		cin >> fprotsent;
 		for (int i = 0; i <= as; i++) {
-			int protsent = ((Stations[i].at-Stations[i].atr) / Stations[i].at) * 100; cout << protsent;
+			protsent = ((Stations[i].at*100-Stations[i].atr*100) / Stations[i].at); cout << protsent<<"\n";
 			if (protsent == fprotsent) {
 				cout << "We have station you need. Look: \n";
 				amountofstations++;
@@ -259,7 +260,7 @@ void EditFiltrStation()
 			}
 
 		}
-			if (amountofstations == 0) cout << "There are no such stations";
+			if (amountofstations == 0) cout << "There are no such stations \n";
 	}
 }
 
