@@ -28,9 +28,11 @@ int ap, as, idp, ids; //ap-amount of pipes, as - amount of station, idp and ids 
 
 void PrintePipe(const Pipe& p)
 {
-	if (p.id != 0) {
-		cout << "Pipe number: " << p.id << "\n It's diameter is: " << p.d << " mm " << " \n It's lenght: " << p.l << " km \n" << "If it's in remont? The answer is ";
-		if (p.remont) cout << "yes \n"; else cout << "no\n";
+	if (p.id != 0)
+	{
+	cout << "Pipe number: " << p.id << "\n It's diameter is: " << p.d << " mm " << " \n It's lenght: " << p.l << " km \n" << "If it's in remont? The answer is ";
+		if (p.remont) cout << "yes \n"; 
+			else cout << "no\n";
 	}
 	else cout << "No dannih about truba";
 }
@@ -116,8 +118,9 @@ KampStation AddStation() {
 
 void PrintStation(const KampStation& s)
 {
-	if(s.id!=0)
-	cout << "Kompressornaya station's id is " << s.id << "\n It's name is " << s.name << "\n It has " << s.at << " tsehov vsego and " << s.atr << " tsehov rabotaut.\n Effectivnost' of station is " << s.eff << "\n";
+	if (s.id != 0) {
+		cout << "Kompressornaya station's id is " << s.id << "\n It's name is " << s.name << "\n It has " << s.at << " tsehov vsego and " << s.atr << " tsehov rabotaut.\n Effectivnost' of station is " << s.eff << "\n";
+	}
 	else cout << "Dannih net";
 }
 
@@ -157,7 +160,7 @@ void fromfile(KampStation& s, Pipe& p) {
 				f >> p.l;
 				f >> p.remont;
 			}
-
+			
 			if (name == "station") {
 				f >> s.id;
 				f.ignore(256, '\n');
@@ -167,7 +170,10 @@ void fromfile(KampStation& s, Pipe& p) {
 				f >> s.atr;
 				f >> s.eff;
 			}
+			
 		}
+		ap++;
+		as++;
 		cout << "Gotovo! \n";
 	}
 
@@ -306,14 +312,14 @@ int main()
 			case 3:
 				if (as == 0) cout << "Dannih about stations net. Neobhodimo vvesti.\n";
 				else 
-					for (int i = 1; i <= as; i++) {
+					for (int i = 0; i <= (as-1); i++) {
 						PrintStation(Stations[i]);
 						cout << "\n";
 					}
 
 				if (ap == 0) cout << "Dannih about pipes net. Neobhodimo vvesti.\n";
 				else 
-					for (int i = 1; i <= ap; i++) {
+					for (int i = 0; i <= (ap-1); i++) {
 						PrintePipe(Pipes[i]);
 						cout << "\n";
 					}
