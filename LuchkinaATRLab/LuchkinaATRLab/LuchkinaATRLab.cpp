@@ -122,7 +122,11 @@ void PrintStation(const KampStation& s)
 }
 
 void outfile(const Pipe& p, const KampStation& s) {
-	ofstream outfile("outfile.txt");
+	string fname;
+	cout << "Enter name for output file. Don't forget to add .txt \n";
+	cin >> fname;
+
+	ofstream outfile(fname);
 	if (p.id != 0) {
 		outfile << "pipe \n" << p.id << " \n" << p.d << " \n" << p.l << "\n"<< p.remont << endl;
 	
@@ -137,7 +141,10 @@ void outfile(const Pipe& p, const KampStation& s) {
 
 void fromfile(KampStation& s, Pipe& p) {
 	ifstream f;
-	f.open("outfile.txt", ios::in);
+	string fname;
+	cout << "Enter name of file you want to take data from. Don't forget to add .txt \n";
+	cin >> fname;
+	f.open(fname, ios::in);
 	if (f.good()) {
 		while (!f.eof()) {
 			string name;
@@ -181,7 +188,8 @@ int GetInt()
 void EditFiltrPipe() {
 	int choice1, choice2, amountofpipes;
 	amountofpipes = 0;
-	int flength, fremont; //length for filtr 
+	int flength;//length for filtr 
+	bool fremont; 
 	cout << "If you want to get all pipes with konkretnym length enter 1. If you want to get all pipes with konkretnym priznakom about remont enter 2. ";
 	cin >> choice1;
 	if (choice1 == 1) {
@@ -278,7 +286,7 @@ int main()
 	KampStation s = {};
  
 	while (1) {
-		cout << "1.Add Pipe\n" << "2.Add Kompressornaya station\n" << "3.See all objects\n" << "4.Edit Pipe\n" << "5.Edit Kompressornaya station\n" << "6.Save data in file\n" << "7.Take data frome file\n" << "8.Delete pipe\n" << "9.Delete station\n" <<"0.Exit\n";
+		cout << "1.Add Pipe\n" << "2.Add Kompressornaya station\n" << "3.See all objects\n" << "4.Edit Pipe\n" << "5.Edit Kompressornaya station\n" << "6.Save data in file\n" << "7.Take data frome file\n" << "8.Delete pipe\n" << "9.Delete station\n" <<"10.Find and edit with filet\n"<<"0.Exit\n";
 
 			switch (GetInt())
 			{
@@ -312,7 +320,7 @@ int main()
 				break;
 			case 4:
 				if (ap > 0) {
-				cout << "There are " << ap << " pipes. Which would you like do edit? \n";
+				cout << "There are " << ap << " pipes. Which would you like to edit? \n";
 				cin >> n;
 				while (n > ap) {
 					cout << "Takoy trubi net. Vvedite snova.\n";
@@ -324,7 +332,7 @@ int main()
 				break;
 			case 5:
 				if (as>0){
-				cout << "There are " << as << " stations. Which would you like do edit? \n";
+				cout << "There are " << as << " stations. Which would you like to edit? \n";
 				cin >> n;
 				while (n > as) {
 					cout << "Takoy station net. Vvedite snova.\n";
@@ -335,10 +343,28 @@ int main()
 				else cout << "There are no pipes.";
 				break;
 			case 6:
-				outfile(p, s);
+				int np, ns;
+				if ((ap > 0) && (as > 0)) {
+					cout << "There are " << ap << " pipes. Which would you like to print in file? \n";
+					cin >> np;
+					while (np > ap) {
+						cout << "Takoy trubi net. Vvedite snova.\n";
+						cin >> np;
+					}
+
+					cout << "There are " << as << " stations. Which would you like to print in file? \n";
+					cin >> ns;
+					while (ns > as) {
+						cout << "Takoy station net. Vvedite snova.\n";
+						cin >> ns;
+					}
+				}
+				outfile(Pipes[np], Stations[ns]);
 				break;
 			case 7:
-				fromfile(s,p);
+				if (ap == 5) cout << "There are 5 pipes, you can't add more. If you want to download from file you need to delete one of pipes.\n";
+				if (as == 5) cout << "There are 5 stations, you can't add more. If you want to download from file you need to delete one of stations.\n";
+				if ((ap != 5) && (as != 5)) fromfile(Stations[as],Pipes[ap]);
 				break;
 			case 8:
 				if (ap > 0) {
@@ -368,7 +394,7 @@ int main()
 				break;
 			case 10: //poisk po fil'try
 				int choice;
-				cout << "If you want to find pipe enter 1. If you want to find station enter 2. \n";
+				cout << "If you want to find pipes enter 1. If you want to find stations enter 2. \n";
 				cin >> choice;
 				if (choice == 1) {
 					if (ap >  0) EditFiltrPipe();
@@ -378,7 +404,6 @@ int main()
 					if (as > 0) EditFiltrStation();
 					else cout << "Stations net.\n";
 				}
-	
 				break;
 			default:
 				break;
