@@ -43,11 +43,11 @@ ostream& operator<< (ostream &out, const KampStation &s)
 
 Pipe AddPipe(map <int,Pipe> &, int &, int &);
 KampStation AddStation(map <int,KampStation> &, int &, int &);
-void EditPipe(Pipe&);
-void EditStation(KampStation&);
+void EditPipe(map <int, Pipe> &, map <int, Pipe > ::iterator);
+void EditStation(map <int, KampStation> &, map <int, KampStation> ::iterator);
 void EditFiltrPipe(map <int, Pipe> &, map <int, Pipe > ::iterator);
 void EditFiltrStation(map <int, KampStation> &, map <int, KampStation> ::iterator);
-void outfile(const Pipe, const KampStation);
+void outfile(map <int, KampStation> &, map <int, Pipe> &, map <int, KampStation> ::iterator, map <int, Pipe> ::iterator);
 void fromfile(map <int, KampStation> &, map <int, Pipe> &, int &, int &);
 void SeeAllObj(map <int, KampStation> & , map <int, Pipe> &, map <int, KampStation> ::iterator, map <int, Pipe> ::iterator);
 void DeletePipe(map <int, Pipe> &, map <int, Pipe> ::iterator);
@@ -68,7 +68,17 @@ int main()
 	string choice1;
  
 	while (1) {
-		cout << "1.Add Pipe\n" << "2.Add Kompressornaya station\n" << "3.See all objects\n" << "4.Edit Pipe\n" << "5.Edit Kompressornaya station\n" << "6.Save data in file\n" << "7.Take data frome file\n" << "8.Delete pipe\n" << "9.Delete station\n" <<"10.Find and edit with filet\n"<<"0.Exit\n";
+		cout<< "1.Add Pipe\n" 
+			<< "2.Add Kompressornaya station\n" 
+			<< "3.See all objects\n" 
+			<< "4.Edit Pipe\n" 
+			<< "5.Edit Kompressornaya station\n" 
+			<< "6.Save data in file\n" 
+			<< "7.Take data frome file\n" 
+			<< "8.Delete pipe\n" 
+			<< "9.Delete station\n" 
+			<< "10.Find and edit with filet\n"
+			<< "0.Exit\n";
 
 		switch (GetInt())
 		{
@@ -85,82 +95,32 @@ int main()
 			SeeAllObj(Stations, Pipes, it_s, it_p);
 			break;
 		case 4:
-			if (!Pipes.empty())
-			{
-				cout << "Which pipe would you like to edit? Enter its ID \n";
-				cin >> n;
-				it_p = Pipes.find(n);
-
-				while (it_p == Pipes.end()) {
-					cout << "Pipe with ID " << n << " net. Vvedite snova.\n";
-					cin >> n;
-					it_p = Pipes.find(n);
-				}
-
-				EditPipe(Pipes[n]);
-			}
-			else cout << "There are no pipes.";
+			EditPipe(Pipes, it_p);
 			break;
 		case 5:
-			if (!Stations.empty())
-			{
-				cout << "Which station would you like to edit? Enter its ID \n";
-				cin >> n;
-				it_s = Stations.find(n);
-
-				while (it_s == Stations.end()) {
-					cout << "Station with ID " << n << " net. Vvedite snova.\n";
-					cin >> n;
-					it_s = Stations.find(n);
-				}
-				EditStation(Stations[n]);
-			}
-			else cout << "There are no pipes.";
+			EditStation(Stations, it_s);
 			break;
 		case 6:
-			int np, ns;
-			if ((!Stations.empty()) && (!Pipes.empty())) {
-				cout << "Which pipe would you like to print in file ? Enter its ID \n";
-				cin >> np;
-				it_p = Pipes.find(np);
-				while (it_p == Pipes.end()) {
-					cout << "Pipe with ID " << n << " net. Vvedite snova.\n";
-					cin >> np;
-					it_p = Pipes.find(np);
-				}
-
-				cout << "Which station would you like to print in file ? Enter its ID \n";
-				cin >> ns;
-				it_s = Stations.find(ns);
-				while (it_s == Stations.end()) {
-					cout << "Station with ID " << n << " net. Vvedite snova.\n";
-					cin >> ns;
-					it_s = Stations.find(ns);
-				}
-				outfile(Pipes[np], Stations[ns]);
-			}
-			else
-				cout << "Stations or Pipes is empti. Enter data.\n";
+				outfile(Stations, Pipes, it_s, it_p);
 				break;
-			case 7:
-				fromfile(Stations, Pipes, idp, ids);
-				break;
-			case 8:
-				DeletePipe(Pipes, it_p);
-				break;
-			case 9:
-				DeleteStation(Stations, it_s);
-				break;
-			case 10: //poisk po fil'try
-				int choice;
-				cout << "If you want to find pipes enter 1. If you want to find stations enter 2. \n";
-				cin >> choice;
-				if (choice == 1) EditFiltrPipe(Pipes, it_p);
-				if (choice == 2) EditFiltrStation(Stations, it_s);
-				break;
-
-			default:
-				break;
+		case 7:
+			fromfile(Stations, Pipes, idp, ids);
+			break;
+		case 8:
+			DeletePipe(Pipes, it_p);
+			break;
+		case 9:
+			DeleteStation(Stations, it_s);
+			break;
+		case 10: //poisk po fil'try
+			int choice;
+			cout << "If you want to find pipes enter 1. If you want to find stations enter 2. \n";
+			cin >> choice;
+			if (choice == 1) EditFiltrPipe(Pipes, it_p);
+			if (choice == 2) EditFiltrStation(Stations, it_s);
+			break;
+		default:
+			break;
 			}
 	}
 
@@ -208,45 +168,73 @@ KampStation AddStation(map <int, KampStation>& Stations, int &as, int &ids) {
 	return s;
 }
 
-void EditPipe(Pipe& p) {
+void EditPipe(map <int, Pipe> & Pipes, map <int, Pipe > ::iterator it_p) {
 
-	int choice;
+	int choice,n;
+
+	if (!Pipes.empty())
+	{
+		cout << "Which pipe would you like to edit? Enter its ID \n";
+		cin >> n;
+		it_p = Pipes.find(n);
+
+		while (it_p == Pipes.end()) {
+			cout << "Pipe with ID " << n << " net. Vvedite snova.\n";
+			cin >> n;
+			it_p = Pipes.find(n);
+		}
+
 	cout << "If you want to edit length of pipe enter 1. Else enter 0.\n"; cin >> choice;
 	if (choice == 1) {
 		cout << "Vvedite novoe znachenie\n";
-		p.l= GetInt();
+		Pipes[n].l= GetInt();
 	}
 	cout << "If you want to edit status of remont of pipe enter 1. Else enter 0.\n"; cin >> choice;
 	if (choice == 1) {
 		cout << "Vvedite 1 if truba v remonte. Else vvedite 0 \n";
-		cin >> p.remont;
+		cin >> Pipes[n].remont;
 	}
-
+	}
+	else cout << "There are no pipes.";
 }
 
-void EditStation(KampStation& s) {
+void EditStation(map <int, KampStation> & Stations, map <int, KampStation> ::iterator it_s) {
 
-	int g;
+	int g, n;
+
+	if (!Stations.empty())
+	{
+		cout << "Which station would you like to edit? Enter its ID \n";
+		cin >> n;
+		it_s = Stations.find(n);
+
+		while (it_s == Stations.end()) {
+			cout << "Station with ID " << n << " net. Vvedite snova.\n";
+			cin >> n;
+			it_s = Stations.find(n);
+		}
+
 	cout << "If you want to edit amount of tsehov enter 1. Else enter 0.\n"; cin >> g;
 	if (g == 1) {
 		cout << "Vvedite novoe znachenie\n";
-		s.at= GetInt();
+		Stations[n].at= GetInt();
 	}
 	cout << "If you want to edit emount of tsehov v rabote enter 1. Else enter 0."; cin >> g;
 	if (g == 1) {
 		cout << "Vvedite novoe znachenie\n";
-		s.atr= GetInt();
-		while (s.atr > s.at) {
+		Stations[n].atr= GetInt();
+		while (Stations[n].atr > Stations[n].at) {
 			cout << "Amount of rabauschih tsehov can't be more than amount of tsehov vsego. Please vvedite correktnoe znachenie.\n";
-			s.atr = GetInt();
+			Stations[n].atr = GetInt();
 		}
 	}
 	cout << "If you want to edit effectivmost' of station enter 1. Else enter 0."; cin >> g;
 	if (g == 1) {
 		cout << "Vvedite novoe znachenie\n";
-		cin >> s.eff;
+		cin >> Stations[n].eff;
 	}
-
+	}
+	else cout << "There are no pipes.";
 }
 
 void EditFiltrPipe(map <int, Pipe> & Pipes, map <int, Pipe > ::iterator it_p) {
@@ -268,7 +256,7 @@ void EditFiltrPipe(map <int, Pipe> & Pipes, map <int, Pipe > ::iterator it_p) {
 				cout<<Pipes[it_p->first];
 				cout << "If you want to edit it, enter 1. Else enter 0. \n";
 				cin >> choice2;
-				if (choice2 == 1) EditPipe(Pipes[it_p->first]);
+				if (choice2 == 1) EditPipe(Pipes, it_p);
 			}
 		}
 		if (amountofpipes == 0) cout << "There are no such pipes";
@@ -287,7 +275,7 @@ void EditFiltrPipe(map <int, Pipe> & Pipes, map <int, Pipe > ::iterator it_p) {
 				cout << Pipes[it_p->first];
 				cout << "If you want to edit it, enter 1. Else enter 0. \n";
 				cin >> choice2;
-				if (choice2 == 1) EditPipe(Pipes[it_p->first]);
+				if (choice2 == 1) EditPipe(Pipes, it_p);
 			}
 		}
 		if (amountofpipes == 0) cout << "There are no such pipes";
@@ -318,27 +306,28 @@ void EditFiltrStation(map <int, KampStation> & Stations, map <int, KampStation> 
 				cout << Stations[it_s->first];
 				cout << "If you want to edit it, enter 1. Else enter 0. \n";
 				cin >> choice2;
-				if (choice2 == 1) EditStation(Stations[it_s->first]);
+				if (choice2 == 1) EditStation(Stations, it_s);
 			}
 		}
 		if (amountofstations == 0) cout << "There are no such stations \n";
 	}
 	amountofstations = 0;
-	int protsent;
+	float protsent;
 	if (choice1 == 2) {
 		cout << "Enter protsent of nezadeistvovannih tsehov \n";
 		cin >> fprotsent;
 
 		it_s = Stations.begin();
 		for (int i = 0; it_s != Stations.end(); it_s++, i++) {
-			protsent = ((Stations[it_s->first].at * 100 - Stations[it_s->first].atr * 100) / Stations[it_s->first].at); cout << protsent << "\n";
+			protsent = (float)((Stations[it_s->first].at * 100 - Stations[it_s->first].atr * 100) / Stations[it_s->first].at); 
+			//cout << protsent << "\n";
 			if (protsent == fprotsent) {
 				cout << "We have station you need. Look: \n";
 				amountofstations++;
 				cout << Stations[it_s->first];
 				cout << "If you want to edit it, enter 1. Else enter 0. \n";
 				cin >> choice2;
-				if (choice2 == 1) EditStation(Stations[it_s->first]);
+				if (choice2 == 1) EditStation(Stations, it_s);
 			}
 		}
 		if (amountofstations == 0) cout << "There are no such stations \n";
@@ -347,15 +336,38 @@ void EditFiltrStation(map <int, KampStation> & Stations, map <int, KampStation> 
 	else cout << "Dannih about stations net. Neobhodimo vvesti.\n";
 }
 
-void outfile(const Pipe p, const KampStation s) {
+void outfile(map <int, KampStation> & Stations, map <int, Pipe> & Pipes, map <int, KampStation> ::iterator it_s, map <int, Pipe> ::iterator it_p) {
 	string fname;
+
+	int np, ns;
+	if ((!Stations.empty()) && (!Pipes.empty())) {
+		cout << "Which pipe would you like to print in file ? Enter its ID \n";
+		cin >> np;
+		it_p = Pipes.find(np);
+		while (it_p == Pipes.end()) {
+			cout << "Pipe with ID " << np << " net. Vvedite snova.\n";
+			cin >> np;
+			it_p = Pipes.find(np);
+		}
+
+		cout << "Which station would you like to print in file ? Enter its ID \n";
+		cin >> ns;
+		it_s = Stations.find(ns);
+		while (it_s == Stations.end()) {
+			cout << "Station with ID " << ns << " net. Vvedite snova.\n";
+			cin >> ns;
+			it_s = Stations.find(ns);
+		}
+
 	cout << "Enter name for output file. Don't forget to add .txt \n";
 	cin >> fname;
 
 	ofstream outfile(fname);
-	outfile << "pipe \n" << p.d << "\n" << p.l << "\n" <<p.remont<<"\n";
-	outfile << "station \n" << s.name << "\n" << s.at << "\n" << s.atr << "\n" << s.eff << "\n";
-
+	outfile << "pipe \n" << Pipes[np].d << "\n" << Pipes[np].l << "\n" << Pipes[np].remont<<"\n";
+	outfile << "station \n" << Stations[ns].name << "\n" << Stations[ns].at << "\n" << Stations[ns].atr << "\n" << Stations[ns].eff << "\n";
+	}
+	else
+		cout << "Stations or Pipes is empti. Enter data.\n";
 }
 
 void fromfile(map <int, KampStation> & Stations, map <int, Pipe> & Pipes, int & idp, int & ids) {
